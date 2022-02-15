@@ -28,6 +28,11 @@ public class Igra {
     }
 
     public void Met() throws Exception{
+        // TODO
+        // if(stanje.stanjeIgre != StanjeIgre.VTEKU){
+        //     return;
+        // }
+
         if(vrzeneKocke != null){return;}
 
         vrzeneKocke = new int[4];
@@ -48,6 +53,11 @@ public class Igra {
     }
 
     public void odigraj(int opcija, boolean leva /*leva cifra ali desna*/) throws Exception{
+        // TODO
+        // if(stanje.stanjeIgre != StanjeIgre.VTEKU){
+        //     return;
+        // }
+
         if(veljavneOdlocitve.contains(opcija)){
             StanjeIgralca stanjeIgralcaNaVrsti = stanje.Get(stanje.naVrsti);
             int[] cifre = cifreOdlocitve(opcija);
@@ -117,6 +127,11 @@ public class Igra {
     }
 
     public void zakljuci() throws Exception{
+        // TODO
+        // if(stanje.stanjeIgre != StanjeIgre.VTEKU){
+        //     return;
+        // }
+
         if(veljavneOdlocitve.isEmpty() & (vrzeneKocke != null) ){
             stanje.Set(stanje.naVrsti, prejsnjeStanjeIgralca);
         }else{
@@ -131,6 +146,8 @@ public class Igra {
         stanje.naslednji();
 
         prejsnjeStanjeIgralca = stanje.GetCopy(stanje.naVrsti);
+
+        // TODO stanje.setStatusIgre();
     }
 
     private void clearIgralneSpr(){

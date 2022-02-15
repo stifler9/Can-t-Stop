@@ -8,6 +8,8 @@ public class Stanje {
     private LinkedList<StanjeIgralca> stanjaIgralcev;
     public int naVrsti;
     public HashMap<Integer, Integer> zasedeni; // polje - igralec
+
+    public StanjeIgre stanjeIgre;
     
     public Stanje(int x) throws Exception{
         if(x > 6){
@@ -21,6 +23,7 @@ public class Stanje {
             stanjaIgralcev.add(new StanjeIgralca());
         }
         zasedeni = new HashMap<Integer, Integer>();
+        stanjeIgre = StanjeIgre.VTEKU;
     }
 
     public StanjeIgralca Get(int i){
@@ -56,4 +59,9 @@ public class Stanje {
         }
         zasedeni.put(polje, naVrsti);
     }
+
+    // protected boolean setStatusIgre(){
+    //     // TODO
+    //     // set status igre
+    // }
 }

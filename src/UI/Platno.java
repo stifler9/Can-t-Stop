@@ -1,28 +1,33 @@
 package UI;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
-import javax.swing.event.MouseInputListener;
 
 import Logika.MaxVisine;
 import Logika.StanjeIgralca;
 
-public class Platno extends JPanel implements MouseInputListener {
+public class Platno extends JPanel implements MouseListener {
 
     public Okno master;
 
     public Platno(Okno master) {
         super();
 
-        this.master = master;
-        this.setSize(11*100, 13*60);
         setBackground(Color.BLACK);
-        this.addMouseListener(this);
+        addMouseListener(this);
+        this.master = master;
     }
-    
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(11*100, 13*60);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -31,6 +36,7 @@ public class Platno extends JPanel implements MouseInputListener {
         int sirina = (int)(getBounds().width / 11);
         
         // polje - Max 13 visina
+        // TODO cifre
         for(int polje = 2; polje < 13; polje++){
             int maxVisina;
             try {
@@ -63,6 +69,7 @@ public class Platno extends JPanel implements MouseInputListener {
         }
 
         // zasedenost
+        // TODO lepse oznaci
         for(int polje: master.cantstop.stanje.zasedeni.keySet()){
             g.setColor(BarveIgralcev.GetColor(master.cantstop.stanje.zasedeni.get(polje)));
             try {
@@ -90,6 +97,8 @@ public class Platno extends JPanel implements MouseInputListener {
             // g.setFont(new Font());
             g.drawString("Met!", (int)(sirina / 3), (int)(visina / 3));
         }else{
+            // TODO Slike kock
+
             g.setColor(Color.WHITE);
             g.drawRect(0, 0, 2*sirina, visina);
             String kockeStr = "";
@@ -165,8 +174,19 @@ public class Platno extends JPanel implements MouseInputListener {
             g.drawString("Zakljuci!", 2*sirina + (int)(sirina / 3), (int)(visina / 3));
         }
 
-        g.setColor(BarveIgralcev.GetColor(master.cantstop.stanje.naVrsti));
-        g.fillRect(10*sirina, 0, sirina, visina);
+        g.setColor(Color.WHITE);
+        String igralecLbl;
+        int stIgr = master.cantstop.stanje.igralcev;
+        if(stIgr == 1){
+            igralecLbl = " igralec";
+        }else if(stIgr == 2){
+            igralecLbl = " igralca";
+        }else if(stIgr < 4){
+            igralecLbl = " igralci";
+        }else{
+            igralecLbl = " igralcev";
+        }
+        g.drawString(String.valueOf(master.cantstop.stanje.igralcev) + igralecLbl, 10*sirina, (int)(visina/2));
     }
 
     private void klik(int x, int y){
@@ -177,7 +197,7 @@ public class Platno extends JPanel implements MouseInputListener {
             if((x <= 2*sirina) & (y <= visina)){
                 try {
                     master.cantstop.Met();
-                    repaint();
+                    master.osveziUI();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -189,7 +209,7 @@ public class Platno extends JPanel implements MouseInputListener {
 
                 try {
                     master.cantstop.odigraj(opcija, levo);
-                    repaint();
+                    master.osveziUI();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -199,7 +219,7 @@ public class Platno extends JPanel implements MouseInputListener {
             if((x > 2*sirina) & (x <= 4*sirina) & (y < visina)){
                 try {
                     master.cantstop.zakljuci();
-                    repaint();
+                    master.osveziUI();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -226,13 +246,5 @@ public class Platno extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseExited(MouseEvent e) { 
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
     }
 }
