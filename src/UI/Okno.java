@@ -90,10 +90,13 @@ public class Okno extends JFrame implements ActionListener {
         // Status
         status = new JLabel();
         status.setFont(new Font(status.getFont().getName(), status.getFont().getStyle(), 20));
+        status.setBackground(Color.BLACK);
+        status.setOpaque(true);
 		GridBagConstraints statusLayout = new GridBagConstraints();
         statusLayout.gridx = 0;
 		statusLayout.gridy = 1;
 		statusLayout.anchor = GridBagConstraints.CENTER;
+        statusLayout.fill = GridBagConstraints.BOTH;
 		getContentPane().add(status, statusLayout);
 
         novaIgra(4);
@@ -119,18 +122,29 @@ public class Okno extends JFrame implements ActionListener {
                 case VTEKU:
                     status.setText("Na vrsti je " + String.valueOf(cantstop.stanje.naVrsti + 1) + ". igralec");
                     break;
-                // TODO Zmage
                 case ZMAGA1:
+                    status.setForeground(BarveIgralcev.GetColor(0));
+                    status.setText("Zmagal je 1. igralec!");
                     break;
                 case ZMAGA2:
+                    status.setForeground(BarveIgralcev.GetColor(1));
+                    status.setText("Zmagal je 2. igralec!");
                     break;
                 case ZMAGA3:
+                    status.setForeground(BarveIgralcev.GetColor(2));
+                    status.setText("Zmagal je 3. igralec!");
                     break;
                 case ZMAGA4:
+                    status.setForeground(BarveIgralcev.GetColor(3));
+                    status.setText("Zmagal je 4. igralec!");
                     break;
                 case ZMAGA5:
+                    status.setForeground(BarveIgralcev.GetColor(4));
+                    status.setText("Zmagal je 5. igralec!");
                     break;
                 case ZMAGA6:
+                    status.setForeground(BarveIgralcev.GetColor(5));
+                    status.setText("Zmagal je 6. igralec!");
                     break;
                 default:
                     break;

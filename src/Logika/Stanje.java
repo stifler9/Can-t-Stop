@@ -45,10 +45,7 @@ public class Stanje {
     }
 
     public void naslednji(){
-        naVrsti++;
-        if(naVrsti == igralcev){
-            naVrsti = 0;
-        }
+        naVrsti = (naVrsti + 1) % igralcev;
     }
 
     public void zasediPolje(int polje){
@@ -60,8 +57,37 @@ public class Stanje {
         zasedeni.put(polje, naVrsti);
     }
 
-    // protected boolean setStatusIgre(){
-    //     // TODO
-    //     // set status igre
-    // }
+    protected void setStatusIgre(){
+        HashMap<Integer, Integer> zmageIgralcev = new HashMap<Integer, Integer>();
+        for(int i = 0; i < igralcev; i++){
+            zmageIgralcev.put(i, 0);
+        }
+        for(int igralec: zasedeni.values()){
+            int zmag = zmageIgralcev.get(igralec);
+            if(++zmag >= 3){
+                stanjeIgre = zmagalIgralec(igralec);
+                break;
+            }
+            zmageIgralcev.put(igralec, zmag);
+        }
+    }
+
+    private StanjeIgre zmagalIgralec(int igralec){
+        switch(igralec){
+            case 0:
+                return StanjeIgre.ZMAGA1;
+            case 1:
+                return StanjeIgre.ZMAGA2;
+            case 2:
+                return StanjeIgre.ZMAGA3;
+            case 3:
+                return StanjeIgre.ZMAGA4;
+            case 4:
+                return StanjeIgre.ZMAGA5;
+            case 5:
+                return StanjeIgre.ZMAGA6;
+            default:
+                return StanjeIgre.VTEKU;
+        }
+    }
 }
