@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 
@@ -16,8 +17,16 @@ public class Platno extends JPanel implements MouseListener {
 
     public Okno master;
 
+    private DiceContainer kocke;
+
     public Platno(Okno master) {
         super();
+
+        try {
+            kocke = new DiceContainer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setBackground(Color.BLACK);
         addMouseListener(this);
@@ -99,18 +108,16 @@ public class Platno extends JPanel implements MouseListener {
             // g.setFont(new Font());
             g.drawString("Met!", (int)(sirina / 3), 2*(int)(visina / 3));
         }else{
-            g.setColor(Color.WHITE);
-            g.drawRect(0, 0, 4*sirina, 2*visina);
-            String kockeStr = "";
-            for(int kocka: master.cantstop.vrzeneKocke){
-                if(kockeStr == ""){
-                    kockeStr = String.valueOf(kocka);
-                }else{
-                    kockeStr += ", " + String.valueOf(kocka);
-                }
-            }
-            // TODO Slike kock
-            g.drawString(kockeStr, 2*(int)(sirina / 3), 4*(int)(visina / 3));
+            // 4*sirina - 2*visina
+
+            int stranica = Math.min(sirina, 2*visina);
+            int dx = (4*sirina - 4*stranica)/2;
+            int dy = (2*visina - stranica)/2;
+            
+            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[0]), dx, dy, stranica, stranica, null);
+            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[1]), dx + stranica, dy, stranica, stranica, null);
+            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[2]), dx + 2*stranica, dy, stranica, stranica, null);
+            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[3]), dx + 3*stranica, dy, stranica, stranica, null);
 
             try{
                 // 1. odlocitev
