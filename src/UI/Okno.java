@@ -1,7 +1,6 @@
 package UI;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridBagLayout;
@@ -21,7 +20,7 @@ import Logika.Igra;
 @SuppressWarnings("serial")
 public class Okno extends JFrame implements ActionListener {
     protected Igra cantstop;
-    
+
     private JMenuBar mainMenu;
     private JMenu novaIgra;
     private JMenuItem novaIgra1;
@@ -30,22 +29,24 @@ public class Okno extends JFrame implements ActionListener {
     private JMenuItem novaIgra4;
     private JMenuItem novaIgra5;
     private JMenuItem novaIgra6;
-    
+
     private Platno platno;
-    
+
     private JLabel status;
 
-    public Okno() throws Exception{
+    public Okno() throws Exception {
         super();
 
         setTitle("Can't Stop");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
-        
-        BufferedImage iconImage = ImageIO.read(new File(".\\Images\\diceIcon.png"));
+
+        // BufferedImage iconImage = ImageIO.read(new File(".\\Images\\diceIcon.png"));
+
+        BufferedImage iconImage = ImageIO.read(getClass().getClassLoader().getResource("diceIcon.png"));
         setIconImage(iconImage);
 
-        //#region Menu
+        // #region Menu
         mainMenu = new JMenuBar();
 
         novaIgra = new JMenu("Nova igra");
@@ -76,50 +77,50 @@ public class Okno extends JFrame implements ActionListener {
         novaIgra6.addActionListener(this);
 
         this.setJMenuBar(mainMenu);
-        //#endregion Menu
-        
+        // #endregion Menu
+
         // Platno
         platno = new Platno(this);
         GridBagConstraints platnoLayout = new GridBagConstraints();
-		platnoLayout.gridx = 0;
-		platnoLayout.gridy = 0;
-		platnoLayout.weightx = 1;
-		platnoLayout.weighty = 1;
-		platnoLayout.fill = GridBagConstraints.BOTH;
-		getContentPane().add(platno, platnoLayout);
-        
+        platnoLayout.gridx = 0;
+        platnoLayout.gridy = 0;
+        platnoLayout.weightx = 1;
+        platnoLayout.weighty = 1;
+        platnoLayout.fill = GridBagConstraints.BOTH;
+        getContentPane().add(platno, platnoLayout);
+
         // Status
         status = new JLabel();
         status.setFont(new Font(status.getFont().getName(), status.getFont().getStyle(), 20));
         status.setBackground(Color.BLACK);
         status.setOpaque(true);
-		GridBagConstraints statusLayout = new GridBagConstraints();
+        GridBagConstraints statusLayout = new GridBagConstraints();
         statusLayout.gridx = 0;
-		statusLayout.gridy = 1;
-		statusLayout.anchor = GridBagConstraints.CENTER;
+        statusLayout.gridy = 1;
+        statusLayout.anchor = GridBagConstraints.CENTER;
         statusLayout.fill = GridBagConstraints.BOTH;
-		getContentPane().add(status, statusLayout);
+        getContentPane().add(status, statusLayout);
 
         novaIgra(4);
     }
-    
-    private void novaIgra(int igralcev) throws Exception{
+
+    private void novaIgra(int igralcev) throws Exception {
         cantstop = new Igra(igralcev);
         osveziUI();
     }
 
-    protected void osveziUI(){
+    protected void osveziUI() {
         setStatus();
         platno.repaint();
     }
 
     private void setStatus() {
-        if(cantstop == null){
+        if (cantstop == null) {
             status.setForeground(Color.WHITE);
-			status.setText("Igra ni v teku");
-		} else{
+            status.setText("Igra ni v teku");
+        } else {
             status.setForeground(BarveIgralcev.GetColor(cantstop.stanje.naVrsti));
-            switch(cantstop.stanje.stanjeIgre){
+            switch (cantstop.stanje.stanjeIgre) {
                 case VTEKU:
                     status.setText("Na vrsti je " + String.valueOf(cantstop.stanje.naVrsti + 1) + ". igralec");
                     break;
@@ -156,22 +157,22 @@ public class Okno extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if(e.getSource() == novaIgra1){
+            if (e.getSource() == novaIgra1) {
                 novaIgra(1);
             }
-            if(e.getSource() == novaIgra2){
+            if (e.getSource() == novaIgra2) {
                 novaIgra(2);
             }
-            if(e.getSource() == novaIgra3){
+            if (e.getSource() == novaIgra3) {
                 novaIgra(3);
             }
-            if(e.getSource() == novaIgra4){
+            if (e.getSource() == novaIgra4) {
                 novaIgra(4);
             }
-            if(e.getSource() == novaIgra5){
+            if (e.getSource() == novaIgra5) {
                 novaIgra(5);
             }
-            if(e.getSource() == novaIgra6){
+            if (e.getSource() == novaIgra6) {
                 novaIgra(6);
             }
         } catch (Exception e1) {
