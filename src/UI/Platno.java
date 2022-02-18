@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import Logika.MaxVisine;
 import Logika.StanjeIgralca;
 
+@SuppressWarnings("serial")
 public class Platno extends JPanel implements MouseListener {
 
     public Okno master;

@@ -18,6 +18,7 @@ import javax.swing.JMenuItem;
 
 import Logika.Igra;
 
+@SuppressWarnings("serial")
 public class Okno extends JFrame implements ActionListener {
     protected Igra cantstop;
     
