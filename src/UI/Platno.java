@@ -54,22 +54,38 @@ public class Platno extends JPanel implements MouseListener {
             try {
                 maxVisina = MaxVisine.MaxVisina(polje);
                 for (int visoko = 0; visoko < maxVisina; visoko++) {
-                    if (visoko == MaxVisine.MaxVisina(polje) - 1) {
-                        g.setColor(Color.YELLOW);
+                    if (visoko == maxVisina - 1) {
+                        if (master.cantstop.cifreVIgri.contains(polje)) {
+                            if (master.cantstop.stanje.Get(master.cantstop.stanje.naVrsti).visine[polje
+                                    - 2] >= maxVisina) {
+                                g.setColor(Color.RED);
+                            } else {
+                                g.setColor(Color.GREEN);
+                            }
+                        } else {
+                            if ((master.cantstop.cifreVIgri.size() >= 3)
+                                    | (master.cantstop.stanje.zasedeni.containsKey(polje))) {
+                                g.setColor(Color.RED);
+                            } else {
+                                g.setColor(Color.YELLOW);
+                            }
+                        }
                         g.drawString(String.valueOf(polje), (polje - 2) * sirina + (int) (2 * sirina / 5),
                                 (12 - visoko) * visina + 2 * (int) (visina / 3));
                     } else {
                         g.setColor(Color.WHITE);
                     }
-                    g.drawRect((polje - 2) * sirina, (12 - visoko) * visina, sirina, visina);
+                    g.drawRect((polje - 2) * sirina, (12 - visoko) * visina, sirina - 1, visina - 1);
                 }
-            } catch (Exception e) {
+            } catch (
+
+            Exception e) {
                 e.printStackTrace();
             }
         }
 
         // Igralci
-        int sirinaIgralca = (int) (sirina / master.cantstop.stanje.igralcev);
+        int sirinaIgralca = (int) ((sirina - 2) / master.cantstop.stanje.igralcev);
         for (int igralec = 0; igralec < master.cantstop.stanje.igralcev; igralec++) {
             // polje - Max 13 visina
             StanjeIgralca stanjeI = master.cantstop.stanje.Get(igralec);
@@ -77,8 +93,8 @@ public class Platno extends JPanel implements MouseListener {
                 int visoko = stanjeI.visine[polje];
                 if (visoko > 0) {
                     g.setColor(BarveIgralcev.GetColor(igralec));
-                    g.fillRect(polje * sirina + (sirinaIgralca * igralec), (13 - visoko) * visina, sirinaIgralca,
-                            visina);
+                    g.fillRect(polje * sirina + (sirinaIgralca * igralec) + 1, (13 - visoko) * visina + 1,
+                            sirinaIgralca, visina - 2);
                 }
             }
         }
@@ -98,21 +114,28 @@ public class Platno extends JPanel implements MouseListener {
 
         // iz kje je zacel
         int polje = 0;
-        g.setColor(BarveIgralcev.GetColor(master.cantstop.stanje.naVrsti));
+        Color barvaIgralca = BarveIgralcev.GetColor(master.cantstop.stanje.naVrsti);
         for (int zacetnaVisina : master.cantstop.prejsnjeStanjeIgralca.visine) {
-            if (zacetnaVisina > 0) {
-                g.fillOval(polje * sirina + (int) (sirina / 3), (13 - zacetnaVisina) * visina + (int) (visina / 3),
-                        sirina - 2 * (int) (sirina / 3), visina - 2 * (int) (visina / 3));
+            try {
+                if ((zacetnaVisina > 0) & (zacetnaVisina < MaxVisine.MaxVisina(polje + 2))) {
+                    g.setColor(barvaIgralca);
+                    g.fillOval(polje * sirina + (int) (sirina / 3), (13 - zacetnaVisina) * visina + (int) (visina / 3),
+                            sirina - 2 * (int) (sirina / 3), visina - 2 * (int) (visina / 3));
+                    g.setColor(Color.BLACK);
+                    g.drawOval(polje * sirina + (int) (sirina / 3), (13 - zacetnaVisina) * visina + (int) (visina / 3),
+                            sirina - 2 * (int) (sirina / 3), visina - 2 * (int) (visina / 3));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             polje++;
         }
 
         if (master.cantstop.vrzeneKocke == null) {
             g.setColor(Color.WHITE);
-            g.drawRect(0, 0, 2 * sirina, visina);
-            // g.setFont(new Font());
+            g.drawRect(0, 0, 2 * sirina, visina - 1);
             g.drawString("Met!", (int) (sirina / 3), 2 * (int) (visina / 3));
-            g.drawRect(0, visina, 2 * sirina, 4 * visina);
+            g.drawRect(0, visina, 2 * sirina, 4 * visina - 1);
         } else {
             // 4*sirina - 2*visina
 
@@ -135,7 +158,7 @@ public class Platno extends JPanel implements MouseListener {
                 } else {
                     g.setColor(Color.GREEN);
                 }
-                g.drawRect(0, 2 * visina, sirina, visina);
+                g.drawRect(0, 2 * visina, sirina - 1, visina - 1);
                 g.drawString(String.valueOf(cifreOdlocitve[0]), (int) (sirina / 3),
                         2 * visina + 2 * (int) (visina / 3));
                 if (!master.cantstop.lahkoIgra(cifreOdlocitve[1])) {
@@ -143,7 +166,7 @@ public class Platno extends JPanel implements MouseListener {
                 } else {
                     g.setColor(Color.GREEN);
                 }
-                g.drawRect(sirina, 2 * visina, sirina, visina);
+                g.drawRect(sirina, 2 * visina, sirina - 1, visina - 1);
                 g.drawString(String.valueOf(cifreOdlocitve[1]), sirina + (int) (sirina / 3),
                         2 * visina + 2 * (int) (visina / 3));
 
@@ -154,7 +177,7 @@ public class Platno extends JPanel implements MouseListener {
                 } else {
                     g.setColor(Color.GREEN);
                 }
-                g.drawRect(0, 3 * visina, sirina, visina);
+                g.drawRect(0, 3 * visina, sirina - 1, visina - 1);
                 g.drawString(String.valueOf(cifreOdlocitve[0]), (int) (sirina / 3),
                         3 * visina + 2 * (int) (visina / 3));
                 if (!master.cantstop.lahkoIgra(cifreOdlocitve[1])) {
@@ -162,7 +185,7 @@ public class Platno extends JPanel implements MouseListener {
                 } else {
                     g.setColor(Color.GREEN);
                 }
-                g.drawRect(sirina, 3 * visina, sirina, visina);
+                g.drawRect(sirina, 3 * visina, sirina - 1, visina - 1);
                 g.drawString(String.valueOf(cifreOdlocitve[1]), sirina + (int) (sirina / 3),
                         3 * visina + 2 * (int) (visina / 3));
 
@@ -173,7 +196,7 @@ public class Platno extends JPanel implements MouseListener {
                 } else {
                     g.setColor(Color.GREEN);
                 }
-                g.drawRect(0, 4 * visina, sirina, visina);
+                g.drawRect(0, 4 * visina, sirina - 1, visina - 1);
                 g.drawString(String.valueOf(cifreOdlocitve[0]), (int) (sirina / 3),
                         4 * visina + 2 * (int) (visina / 3));
                 if (!master.cantstop.lahkoIgra(cifreOdlocitve[1])) {
@@ -181,7 +204,7 @@ public class Platno extends JPanel implements MouseListener {
                 } else {
                     g.setColor(Color.GREEN);
                 }
-                g.drawRect(sirina, 4 * visina, sirina, visina);
+                g.drawRect(sirina, 4 * visina, sirina - 1, visina - 1);
                 g.drawString(String.valueOf(cifreOdlocitve[1]), sirina + (int) (sirina / 3),
                         4 * visina + 2 * (int) (visina / 3));
             } catch (Exception e) {
