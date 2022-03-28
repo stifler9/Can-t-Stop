@@ -143,11 +143,15 @@ public class Platno extends JPanel implements MouseListener {
             int dx = (4 * sirina - 4 * stranica) / 2;
             int dy = (2 * visina - stranica) / 2;
 
-            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[0]), dx, dy, stranica, stranica, null);
-            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[1]), dx + stranica, dy, stranica, stranica, null);
-            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[2]), dx + 2 * stranica, dy, stranica, stranica,
+            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[0]), dx + 2, dy + 2, stranica - 4, stranica - 4,
                     null);
-            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[3]), dx + 3 * stranica, dy, stranica, stranica,
+            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[1]), dx + stranica + 2, dy + 2, stranica - 4,
+                    stranica - 4, null);
+            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[2]), dx + 2 * stranica + 2, dy + 2, stranica - 4,
+                    stranica - 4,
+                    null);
+            g.drawImage(kocke.slikaKocke(master.cantstop.vrzeneKocke[3]), dx + 3 * stranica + 2, dy + 2, stranica - 4,
+                    stranica - 4,
                     null);
 
             try {
@@ -229,7 +233,16 @@ public class Platno extends JPanel implements MouseListener {
         } else {
             igralecLbl = " igralcev";
         }
-        g.drawString(String.valueOf(master.cantstop.stanje.igralcev) + igralecLbl, 10 * sirina, 2 * (int) (visina / 2));
+        g.drawString(String.valueOf(master.cantstop.stanje.igralcev) + igralecLbl, 10 * sirina, 2 * (int) (visina / 3));
+
+        String neomLbl;
+        if (master.cantstop.getNeomejenoZmag()) {
+            neomLbl = "Neomejeno zmag";
+            g.setColor(Color.GREEN);
+        } else {
+            neomLbl = "3 zasedena polja";
+        }
+        g.drawString(neomLbl, 10 * sirina, visina + 2 * (int) (visina / 3));
     }
 
     private void klik(int x, int y) {

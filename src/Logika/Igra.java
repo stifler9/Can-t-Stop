@@ -13,6 +13,8 @@ public class Igra {
     public LinkedList<Integer> cifreVIgri; // Lahko Set<>
     public LinkedList<Integer> veljavneOdlocitve; // 0-2
 
+    private boolean neomejenoZmag;
+
     private static Random random;
 
     public Igra(int i) throws Exception {
@@ -25,6 +27,19 @@ public class Igra {
         veljavneOdlocitve = new LinkedList<Integer>();
 
         random = new Random();
+    }
+
+    public boolean getNeomejenoZmag() {
+        return neomejenoZmag;
+    }
+
+    public void setNeomejenoZmag(boolean neomejenoZmag) {
+        this.neomejenoZmag = neomejenoZmag;
+        if (neomejenoZmag) {
+            stanje.stanjeIgre = StanjeIgre.VTEKU;
+        } else {
+            stanje.setStatusIgre();
+        }
     }
 
     public void Met() throws Exception {
@@ -146,7 +161,9 @@ public class Igra {
 
         prejsnjeStanjeIgralca = stanje.GetCopy(stanje.naVrsti);
 
-        stanje.setStatusIgre();
+        if (!neomejenoZmag) {
+            stanje.setStatusIgre();
+        }
     }
 
     private void clearIgralneSpr() {

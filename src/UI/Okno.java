@@ -21,18 +21,22 @@ import Logika.Igra;
 public class Okno extends JFrame implements ActionListener {
     protected Igra cantstop;
 
+    // #region Menu
     private JMenuBar mainMenu;
+
     private JMenu novaIgra;
-    private JMenuItem novaIgra1;
-    private JMenuItem novaIgra2;
-    private JMenuItem novaIgra3;
-    private JMenuItem novaIgra4;
-    private JMenuItem novaIgra5;
-    private JMenuItem novaIgra6;
+    private JMenuItem[] novaIgraN;
+
+    private JMenu neomejenoZmag;
+
+    private JMenuItem[] neoZmJaNe;
+    // #endregion Menu
 
     private Platno platno;
 
     private JLabel status;
+
+    private static final int maxIgralcev = 6;
 
     public Okno() throws Exception {
         super();
@@ -52,29 +56,22 @@ public class Okno extends JFrame implements ActionListener {
         novaIgra = new JMenu("Nova igra");
         mainMenu.add(novaIgra);
 
-        novaIgra1 = new JMenuItem("1");
-        novaIgra.add(novaIgra1);
-        novaIgra1.addActionListener(this);
+        novaIgraN = new JMenuItem[maxIgralcev];
+        for (int i = 0; i < maxIgralcev; i++) {
+            novaIgraN[i] = new JMenuItem(String.valueOf(i + 1));
+            novaIgra.add(novaIgraN[i]);
+            novaIgraN[i].addActionListener(this);
+        }
 
-        novaIgra2 = new JMenuItem("2");
-        novaIgra.add(novaIgra2);
-        novaIgra2.addActionListener(this);
+        neomejenoZmag = new JMenu("Neomejeno zmag");
+        mainMenu.add(neomejenoZmag);
 
-        novaIgra3 = new JMenuItem("3");
-        novaIgra.add(novaIgra3);
-        novaIgra3.addActionListener(this);
-
-        novaIgra4 = new JMenuItem("4");
-        novaIgra.add(novaIgra4);
-        novaIgra4.addActionListener(this);
-
-        novaIgra5 = new JMenuItem("5");
-        novaIgra.add(novaIgra5);
-        novaIgra5.addActionListener(this);
-
-        novaIgra6 = new JMenuItem("6");
-        novaIgra.add(novaIgra6);
-        novaIgra6.addActionListener(this);
+        neoZmJaNe = new JMenuItem[2];
+        for (int i = 0; i < 2; i++) {
+            neoZmJaNe[i] = new JMenuItem(((i == 0) ? "Ja" : "Ne"));
+            neomejenoZmag.add(neoZmJaNe[i]);
+            neoZmJaNe[i].addActionListener(this);
+        }
 
         this.setJMenuBar(mainMenu);
         // #endregion Menu
@@ -107,6 +104,13 @@ public class Okno extends JFrame implements ActionListener {
     private void novaIgra(int igralcev) throws Exception {
         cantstop = new Igra(igralcev);
         osveziUI();
+    }
+
+    private void setNeomejenoZmag(boolean ja) {
+        if (cantstop.getNeomejenoZmag() != ja) {
+            cantstop.setNeomejenoZmag(ja);
+            osveziUI();
+        }
     }
 
     protected void osveziUI() {
@@ -157,23 +161,16 @@ public class Okno extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if (e.getSource() == novaIgra1) {
-                novaIgra(1);
+            for (int i = 0; i < maxIgralcev; i++) {
+                if (e.getSource() == novaIgraN[i]) {
+                    novaIgra(i + 1);
+                }
             }
-            if (e.getSource() == novaIgra2) {
-                novaIgra(2);
+            if (e.getSource() == neoZmJaNe[0]) {
+                setNeomejenoZmag(true);
             }
-            if (e.getSource() == novaIgra3) {
-                novaIgra(3);
-            }
-            if (e.getSource() == novaIgra4) {
-                novaIgra(4);
-            }
-            if (e.getSource() == novaIgra5) {
-                novaIgra(5);
-            }
-            if (e.getSource() == novaIgra6) {
-                novaIgra(6);
+            if (e.getSource() == neoZmJaNe[1]) {
+                setNeomejenoZmag(false);
             }
         } catch (Exception e1) {
             e1.printStackTrace();
