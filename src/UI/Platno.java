@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 
 import javax.swing.JPanel;
@@ -14,9 +15,14 @@ import Logika.MaxVisine;
 import Logika.StanjeIgralca;
 
 @SuppressWarnings("serial")
-public class Platno extends JPanel implements MouseListener {
+public class Platno extends JPanel implements MouseMotionListener, MouseListener {
 
     public Okno master;
+
+    private Integer hoverOdlocitve;
+    private Boolean hoverLevo;
+    private boolean hoverMet;
+    private boolean hoverZakljuci;
 
     public Platno(Okno master) {
         super();
@@ -29,6 +35,7 @@ public class Platno extends JPanel implements MouseListener {
 
         setBackground(Color.BLACK);
         addMouseListener(this);
+        addMouseMotionListener(this);
         this.master = master;
     }
 
@@ -126,7 +133,7 @@ public class Platno extends JPanel implements MouseListener {
 
         if (master.cantstop.vrzeneKocke == null) {
             g.setColor(Color.WHITE);
-            PositionLoader.izrisiMet(g);
+            PositionLoader.izrisiMet(g, hoverMet);
             PositionLoader.izrisiPodMet(g);
         } else {
             // 4*sirina - 2*visina
@@ -151,7 +158,7 @@ public class Platno extends JPanel implements MouseListener {
 
         if (master.cantstop.veljavneOdlocitve.isEmpty()) {
             g.setColor(Color.WHITE);
-            PositionLoader.izrisiZakljucek(g);
+            PositionLoader.izrisiZakljucek(g, hoverZakljuci);
         }
 
         // #region Info
@@ -188,19 +195,26 @@ public class Platno extends JPanel implements MouseListener {
         } else {
             g.setColor(Color.GREEN);
         }
-        PositionLoader.izrisiOdlocitev(g, o, true, cifreOdlocitve[0]);
+        PositionLoader.izrisiOdlocitev(g, o, true, cifreOdlocitve[0], isHovered(o, true));
 
         if (!master.cantstop.lahkoIgra(cifreOdlocitve[1])) {
             g.setColor(Color.RED);
         } else {
             g.setColor(Color.GREEN);
         }
-        PositionLoader.izrisiOdlocitev(g, o, false, cifreOdlocitve[1]);
+        PositionLoader.izrisiOdlocitev(g, o, false, cifreOdlocitve[1], isHovered(o, false));
+    }
+
+    private boolean isHovered(int o, boolean leva) {
+        if (hoverOdlocitve == null) {
+            return false;
+        }
+        return ((hoverOdlocitve == o) & (hoverLevo == leva));
     }
 
     private void klik(int x, int y) {
         if (master.cantstop.vrzeneKocke == null) {
-            if (PositionLoader.klikMet(x, y)) {
+            if (PositionLoader.naMetu(x, y)) {
                 try {
                     master.cantstop.Met();
                     master.osveziUI();
@@ -211,7 +225,7 @@ public class Platno extends JPanel implements MouseListener {
         } else {
             for (int opcija = 0; opcija < 3; opcija++) {
                 for (Boolean levo : new boolean[] { false, true }) {
-                    if (PositionLoader.klikOdlocitev(x, y, opcija, levo)) {
+                    if (PositionLoader.naOdlocitvi(x, y, opcija, levo)) {
                         try {
                             master.cantstop.odigraj(opcija, levo);
                             master.osveziUI();
@@ -223,7 +237,7 @@ public class Platno extends JPanel implements MouseListener {
             }
         }
         if (master.cantstop.veljavneOdlocitve.isEmpty()) {
-            if (PositionLoader.klikZakljucek(x, y)) {
+            if (PositionLoader.naZakljucku(x, y)) {
                 try {
                     master.cantstop.zakljuci();
                     master.osveziUI();
@@ -231,6 +245,31 @@ public class Platno extends JPanel implements MouseListener {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void hover(int x, int y) {
+        Integer hOBefore = hoverOdlocitve;
+        Boolean hLBefore = hoverLevo;
+        boolean hMBefore = hoverMet;
+        boolean hZBefore = hoverZakljuci;
+
+        hoverOdlocitve = null;
+        hoverLevo = null;
+        for (int opcija = 0; opcija < 3; opcija++) {
+            for (Boolean levo : new boolean[] { false, true }) {
+                if (PositionLoader.naOdlocitvi(x, y, opcija, levo)) {
+                    hoverOdlocitve = opcija;
+                    hoverLevo = levo;
+                }
+            }
+        }
+        hoverMet = PositionLoader.naMetu(x, y);
+        hoverZakljuci = PositionLoader.naZakljucku(x, y);
+
+        if ((hoverLevo != hLBefore) | (hoverOdlocitve != hOBefore) | (hMBefore != hoverMet)
+                | (hZBefore != hoverZakljuci)) {
+            repaint();
         }
     }
 
@@ -253,5 +292,14 @@ public class Platno extends JPanel implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        hover(e.getX(), e.getY());
     }
 }

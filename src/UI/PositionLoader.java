@@ -31,7 +31,7 @@ public class PositionLoader {
     }
     // #endregion Setters
 
-    private static boolean klikZnotraj(int x, int y, int[] pozicija) {
+    private static boolean naPoziciji(int x, int y, int[] pozicija) {
         // pos - [x, y, sirina, visina]
         if ((x < pozicija[0]) | (x > pozicija[0] + pozicija[2])) {
             return false;
@@ -96,18 +96,29 @@ public class PositionLoader {
     }
 
     // #region Met
-    private static int[] getPositionMet() {
-        return new int[] { 0, 0, 2 * sirinaPolja, visinaPolja - 1 };
+    private static int[] getPositionMet(boolean hover) {
+        int[] rez = new int[] { 0, 0, 2 * sirinaPolja, visinaPolja - 1, 0, 0 };
+        // rez[4] = rez[0];
+        // rez[5] = rez[1];
+        if (hover) {
+            int dx = (int) (sirinaPolja / 8);
+            int dy = (int) (visinaPolja / 8);
+            rez[0] += dx;
+            rez[1] += dy;
+            rez[2] -= 2 * dx;
+            rez[3] -= 2 * dy;
+        }
+        return rez;
     }
 
-    protected static void izrisiMet(Graphics g) {
-        int[] pozicija = getPositionMet();
+    protected static void izrisiMet(Graphics g, boolean hover) {
+        int[] pozicija = getPositionMet(hover);
         g.drawRect(pozicija[0], pozicija[1], pozicija[2], pozicija[3]);
-        g.drawString("Met!", pozicija[0] + (int) (sirinaPolja / 3), pozicija[1] + 2 * (int) (visinaPolja / 3));
+        g.drawString("Met!", pozicija[4] + (int) (sirinaPolja / 3), pozicija[5] + 2 * (int) (visinaPolja / 3));
     }
 
-    protected static boolean klikMet(int x, int y) {
-        return klikZnotraj(x, y, getPositionMet());
+    protected static boolean naMetu(int x, int y) {
+        return naPoziciji(x, y, getPositionMet(false));
     }
     // #endregion Met
 
@@ -130,35 +141,58 @@ public class PositionLoader {
     }
 
     // #region Odlocitve
-    private static int[] getPositionOdlocitev(int o, boolean leva) {
-        return new int[] { (leva ? 0 : sirinaPolja), (2 + o) * visinaPolja, sirinaPolja - 1, visinaPolja - 1 };
+    private static int[] getPositionOdlocitev(int o, boolean leva, boolean hover) {
+        int[] rez = new int[] { (leva ? 0 : sirinaPolja), (2 + o) * visinaPolja, sirinaPolja - 1, visinaPolja - 1, 0,
+                0 };
+        rez[4] = rez[0];
+        rez[5] = rez[1];
+        if (hover) {
+            int dx = (int) (sirinaPolja / 8);
+            int dy = (int) (visinaPolja / 8);
+            rez[0] += dx;
+            rez[1] += dy;
+            rez[2] -= 2 * dx;
+            rez[3] -= 2 * dy;
+        }
+        return rez;
     }
 
-    protected static void izrisiOdlocitev(Graphics g, int o, boolean leva, int stevilka) {
-        int[] pozicija = getPositionOdlocitev(o, leva);
+    protected static void izrisiOdlocitev(Graphics g, int o, boolean leva, int stevilka, boolean hover) {
+        int[] pozicija = getPositionOdlocitev(o, leva, hover);
         g.drawRect(pozicija[0], pozicija[1], pozicija[2], pozicija[3]);
-        g.drawString(String.valueOf(stevilka), pozicija[0] + (int) (sirinaPolja / 3),
-                pozicija[1] + 2 * (int) (visinaPolja / 3));
+        g.drawString(String.valueOf(stevilka), pozicija[4] + (int) (sirinaPolja / 3),
+                pozicija[5] + 2 * (int) (visinaPolja / 3));
     }
 
-    protected static boolean klikOdlocitev(int x, int y, int o, boolean leva) {
-        return klikZnotraj(x, y, getPositionOdlocitev(o, leva));
+    protected static boolean naOdlocitvi(int x, int y, int o, boolean leva) {
+        return naPoziciji(x, y, getPositionOdlocitev(o, leva, false));
     }
     // #endregion Odlocitve
 
     // #region Zakljucek
-    private static int[] getPositionZakljucek() {
-        return new int[] { 0, 5 * visinaPolja, 2 * sirinaPolja, visinaPolja };
+    private static int[] getPositionZakljucek(boolean hover) {
+        int[] rez = new int[] { 0, 5 * visinaPolja, 2 * sirinaPolja, visinaPolja, 0, 0 };
+        rez[4] = rez[0];
+        rez[5] = rez[1];
+        if (hover) {
+            int dx = (int) (sirinaPolja / 8);
+            int dy = (int) (visinaPolja / 8);
+            rez[0] += dx;
+            rez[1] += dy;
+            rez[2] -= 2 * dx;
+            rez[3] -= 2 * dy;
+        }
+        return rez;
     }
 
-    protected static void izrisiZakljucek(Graphics g) {
-        int[] pozicija = getPositionZakljucek();
+    protected static void izrisiZakljucek(Graphics g, boolean hover) {
+        int[] pozicija = getPositionZakljucek(hover);
         g.drawRect(pozicija[0], pozicija[1], pozicija[2], pozicija[3]);
-        g.drawString("Zakljuci!", pozicija[0] + (int) (sirinaPolja / 3), pozicija[1] + 2 * (int) (visinaPolja / 3));
+        g.drawString("Zakljuci!", pozicija[4] + (int) (sirinaPolja / 3), pozicija[5] + 2 * (int) (visinaPolja / 3));
     }
 
-    protected static boolean klikZakljucek(int x, int y) {
-        return klikZnotraj(x, y, getPositionZakljucek());
+    protected static boolean naZakljucku(int x, int y) {
+        return naPoziciji(x, y, getPositionZakljucek(false));
     }
     // #endregion Zakljucek
 }
